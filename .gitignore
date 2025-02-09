@@ -1,15 +1,21 @@
-<<<<<<< HEAD
-*.log 
-=======
-# Ignore Windows system files
-Thumbs.db
-ehthumbs.db
-Desktop.ini
+# Ignore system files and folders
+.DS_Store       # macOS system file
+Thumbs.db        # Windows system file
 
-# Ignore temporary files
+# Ignore IDE-related folders
+.idea/           # JetBrains IDEs
+.vscode/         # Visual Studio Code
+
+# Ignore Docker-related files
+Dockerfile.txt   # Dockerfile if it's not needed
+docker-compose.yml
+
+# Ignore Node.js dependencies (if using Node.js)
+node_modules/
+
+# Ignore Composer's vendor folder (if using PHP)
+vendor/
+
+# Ignore logs and temporary files
 *.log
 *.tmp
-
-# Ignore IDE folders
-.vscode/
->>>>>>> origin/main
