@@ -1,0 +1,11 @@
+# Ignore Windows system files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Ignore temporary files
+*.log
+*.tmp
+
+# Ignore IDE folders
+.vscode/

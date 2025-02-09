@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Employee Management</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #e9f5ff; /* Light blue background */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding-top: 30px;
+      opacity: 0;
+      animation: fadeIn 1s forwards; /* Fade-in effect when page loads */
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    /* Pop-up box animation when the page loads */
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 30px;
+      background-color: #007bff;
+      color: white;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      animation: popUp 0.5s ease-out forwards;
+    }
+
+    @keyframes popUp {
+      0% { transform: translate(-50%, -60%); opacity: 0; }
+      100% { transform: translate(-50%, -50%); opacity: 1; }
+    }
+
+    /* Animated Scrolling Text */
+    #animatedText {
+      white-space: nowrap;
+      overflow: hidden;
+      background-color: #007bff;
+      color: #fff;
+      font-size: 28px; /* Larger text size */
+      font-weight: bold;
+      padding: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      text-align: center;
+      animation: slideIn 1s ease-in-out forwards;
+    }
+    @keyframes slideIn {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    #animatedText span {
+      display: inline-block;
+      padding-left: 100%;
+      animation: marquee 20s linear forwards; /* Slower animation and one-time scroll */
+    }
+
+    @keyframes marquee {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(-100%, 0); }
+    }
+
+    /* Card and Table Style */
+    .card {
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card-header {
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+      background-color: #007bff;
+      color: white;
+      position: relative;
+    }
+
+    .card-header::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.3);
+      bottom: 0;
+      left: 0;
+    }
+
+    .table thead th {
+      background-color: #007bff;
+      color: #fff;
+    }
+
+    .btn-custom {
+      min-width: 80px;
+    }
+
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      color: #555;
+      font-size: 14px;
+      padding: 10px;
+      background-color: #fafafa;
+      border-top: 1px solid #ddd;
+    }
+
+    .btn-active {
+      background-color: #ffac33; /* Yellow when clicked */
+      color: white;
+      box-shadow: 0 0 8px rgba(255, 165, 51, 0.8);
+    }
+
+    .success-message {
+      background-color: #28a745;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 15px;
+      text-align: center;
+      display: none;
+      animation: fadeIn 0.5s forwards;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      #animatedText {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Pop-up Message -->
+  <div class="popup" id="popupMessage">
+    <h3>Welcome to the CRUD Employee Management App!</h3>
+    <p>Made by Kamal, Narinder, and Sukhman</p>
+  </div>
+
+  <div class="container">
+    <!-- Animated Text -->
+    <div id="animatedText">
+      <span>CRUD APPLICATION PROJECT</span>
+    </div>
+    
+    <h2 class="text-center">Employee Management</h2>
+    
+    <!-- Employee Form Card -->
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title mb-0">Add Employee</h4>
+      </div>
+      <div class="card-body">
+        <form id="employeeForm">
+          <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" required>
+          </div>
+          <div class="mb-3">
+            <label for="position" class="form-label">Position</label>
+            <input type="text" class="form-control" id="position" name="position" placeholder="Enter Position" required>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Enter Email" required>
+          </div>
+          <button type="submit" class="btn btn-success" id="saveBtn">Save</button>
+        </form>
+        <!-- Success message -->
+        <div class="success-message" id="successMessage">
+          Employee added successfully!
+        </div>
+      </div>
+    </div>
+    
+    <!-- Employee List Card -->
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title mb-0">Employee List</h4>
+      </div>
+      <div class="card-body">
+        <div id="loading" style="display:none;" class="text-center mb-3">Loading...</div>
+        <table class="table table-striped" id="employeeTable">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Position</th>
+              <th>Email</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Employee rows will be appended here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    Made by Kamal, Narinder, and Sukhman
+  </footer>
+  
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Audio file for button clicks -->
+  <audio id="clickSound" src="click-sound.mp3"></audio>
+
+  <script>
+    const employeeForm = document.getElementById('employeeForm');
+    const employeeTable = document.getElementById('employeeTable').querySelector('tbody');
+    const saveButton = document.getElementById('saveBtn');
+    const clickSound = document.getElementById('clickSound');
+    const popupMessage = document.getElementById('popupMessage');
+    const successMessage = document.getElementById('successMessage');
+
+    // Show the pop-up message after 1 second of page load
+    window.onload = function() {
+      setTimeout(function() {
+        popupMessage.style.display = 'block';
+        setTimeout(function() {
+          popupMessage.style.display = 'none';
+        }, 4000); // Hide pop-up after 4 seconds
+      }, 1000);
+    }
+
+    // Button click sound effect
+    function playClickSound() {
+      clickSound.play();
+    }
+
+    // Add active class and change appearance
+    function addActiveClass(button) {
+      button.classList.add('btn-active');
+      setTimeout(() => {
+        button.classList.remove('btn-active');
+      }, 300); // Remove active class after 300ms
+    }
+
+    employeeForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+      const formData = new FormData(employeeForm);
+      playClickSound(); // Play sound on Save button click
+      addActiveClass(saveButton); // Change appearance on Save button click
+
+      fetch('saveEmployee.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${formData.get('name')}</td>
+            <td>${formData.get('position')}</td>
+            <td>${formData.get('email')}</td>
+            <td>
+              <button class="btn btn-warning btn-sm" onclick="editEmployee(this)"><i class="fas fa-edit"></i> Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteEmployee(this)"><i class="fas fa-trash"></i> Delete</button>
+            </td>
+          `;
+          employeeTable.appendChild(row);
+          employeeForm.reset();
+          
+          // Show success message
+          successMessage.style.display = 'block';
+          setTimeout(() => {
+            successMessage.style.display = 'none';
+          }, 3000); // Hide success message after 3 seconds
+        } else {
+          alert("Error: " + data.error);
+        }
+      })
+      .catch(error => {
+        console.error("Fetch Error:", error);
+        alert("Error saving employee.");
+      });
+    });
+
+    function editEmployee(button) {
+      playClickSound(); // Play sound on Edit button click
+      addActiveClass(button); // Change appearance on Edit button click
+
+      const row = button.parentNode.parentNode;
+      const name = row.children[0].textContent;
+      const position = row.children[1].textContent;
+      const email = row.children[2].textContent;
+
+      document.getElementById('name').value = name;
+      document.getElementById('position').value = position;
+      document.getElementById('email').value = email;
+
+      employeeTable.removeChild(row);
+    }
+
+    function deleteEmployee(button) {
+      playClickSound(); // Play sound on Delete button click
+      addActiveClass(button); // Change appearance on Delete button click
+
+      const row = button.parentNode.parentNode;
+      employeeTable.removeChild(row);
+    }
+  </script>
+</body>
+</html>
